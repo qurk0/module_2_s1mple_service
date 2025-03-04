@@ -19,11 +19,10 @@ func NewRouters(r *Routers, token string) *fiber.App {
 
 	// Настройка CORS (разрешенные методы, заголовки, авторизация)
 	app.Use(cors.New(cors.Config{
-		AllowMethods:     "GET, POST, PUT, DELETE",
-		AllowHeaders:     "Accept, Authorization, Content-Type, X-CSRF-Token, X-REQUEST-SomeID",
-		ExposeHeaders:    "Link",
-		AllowCredentials: true,
-		MaxAge:           300,
+		AllowMethods:  "GET, POST, PUT, DELETE",
+		AllowHeaders:  "Accept, Authorization, Content-Type, X-CSRF-Token, X-REQUEST-ID",
+		ExposeHeaders: "Link",
+		MaxAge:        300,
 	}))
 
 	// Группа маршрутов с авторизацией
