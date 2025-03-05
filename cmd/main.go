@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/pkg/errors"
 
@@ -18,6 +19,10 @@ import (
 )
 
 func main() {
+	if err := godotenv.Load(config.EnvPath); err != nil {
+		log.Fatal("Ошибка загрузки env файла:", err)
+	}
+
 	// Загружаем конфигурацию из переменных окружения
 	var cfg config.AppConfig
 	if err := envconfig.Process("", &cfg); err != nil {

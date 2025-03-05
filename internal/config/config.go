@@ -6,6 +6,8 @@ import (
 
 // Общая конфигурация сервиса, тут должны быть все переменные
 
+const EnvPath = "local.env"
+
 type AppConfig struct {
 	LogLevel   string
 	Rest       Rest
