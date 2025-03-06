@@ -18,10 +18,11 @@ Simple Service – это REST API-сервис, написанный на Go с
 
 Перед запуском убедитесь, что у вас установлены:
 
+- Git
 - Go
 - Docker
-- DataGrip или аналогичное приложение
-- Postman или Insomnia для тестирования API
+- DataGrip
+- Postman для тестирования API
 
 ### **1.2 Клонирование репозитория**
 
@@ -58,12 +59,11 @@ docker run --name postgres-db -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin 
 
 ## **3️⃣ Настройка проекта**
 
-### **3.1 Создание `.env` файла**
+### **3.1 `local.env` файл**
 
-Создайте `.env` файл и пропишите параметры:
+У вас он уже есть в проекте. В `.env` файлах лежат переменные окружения, которые нельзя хранить в коде для безопасности, и конфигурация сервиса (пример):
 
 ```
-LOG_LEVEL=info
 POSTGRES_USER=admin
 POSTGRES_PASSWORD=admin
 POSTGRES_DB=simple_service
@@ -71,11 +71,8 @@ POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
 REST_LISTEN_ADDRESS=:8080
 REST_TOKEN=your_secret_token
-
 ```
 
-Также установите плагин в вашу IDLE.
-Я использую ее: https://github.com/Ashald/EnvFile
 ### **3.2 Применение миграций**
 
 Создайте таблицу `tasks` в базе данных:
@@ -96,13 +93,13 @@ CREATE TABLE tasks (
 ## **4️⃣ Запуск сервиса**
 
 ### **4.1 Локальный запуск**
-
+Таким способом мы **не** запускаем проекты во время локальной разработки:
 ```
 go run cmd/main.go
-
 ```
+Всегда запускайте в IDE в **Debug** или в обычном режимах. Описано в pdf файле в задании на kaiton.
 
-Сервис будет доступен по адресу `http://localhost:8080`
+Сервис будет доступен по адресу `http://localhost:8080`, если в `.env` файле вы указали PORT=:8080.
 
 ---
 
@@ -113,7 +110,7 @@ go run cmd/main.go
 **Запрос:**
 
 ```
-POST http://localhost:8080/v1/tasks
+POST http://localhost:8080/v1/create_task
 Content-Type: application/json
 Authorization: Bearer your_secret_token
 
