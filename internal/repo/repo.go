@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"fmt"
+
 	"github.com/jackc/pgx/v5"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -15,7 +16,8 @@ import (
 
 // SQL-запрос на вставку задачи
 const (
-	insertTaskQuery = `INSERT INTO tasks (title, description) VALUES ($1, $2) RETURNING id;`
+	insertTaskQuery  = `INSERT INTO tasks (title, description) VALUES ($1, $2) RETURNING id;`
+	getTaskByIdQuery = `SELECT id, title, description, created_at, updated_at, status FROM tasks WHERE id = $1;`
 )
 
 type repository struct {
@@ -24,7 +26,8 @@ type repository struct {
 
 // Repository - интерфейс с методом создания задачи
 type Repository interface {
-	CreateTask(ctx context.Context, task Task) (int, error) // Создание задачи
+	CreateTask(ctx context.Context, task Task) (int, error)   // Создание задачи
+	GetTaskById(ctx context.Context, id int) (GetTask, error) // Получение задачи
 }
 
 // NewRepository - создание нового экземпляра репозитория с подключением к PostgreSQL
@@ -70,4 +73,14 @@ func (r *repository) CreateTask(ctx context.Context, task Task) (int, error) {
 		return 0, errors.Wrap(err, "failed to insert task")
 	}
 	return id, nil
+}
+
+func (r *repository) GetTaskById(ctx context.Context, id int) (GetTask, error) {
+	var task GetTask
+	err := r.pool.QueryRow(ctx, getTaskByIdQuery, id).Scan(&task.ID, &task.Title, &task.Description, &task.CreatedAt, &task.UpdatedAt, &task.Status)
+	if err != nil {
+		return GetTask{}, errors.Wrap(err, "failed to query task")
+	}
+
+	return task, nil
 }
